@@ -166,11 +166,91 @@ int main()
 }
 */
 
+/*
 //数组指针
 int main()
 {
     int a[3] = {0,1,2};
+    int n;
+    int i;
+    // 指针数组，它是数组，每个元素都是指针
+    int *p[3];
+
     printf("%d\n", sizeof(a));
+
+    //数组赋值指针数组，方法一
+    //p[0] = &a[0];
+    //p[1] = &a[1];
+    //p[2] = &a[2];
+
+    //数组赋值指针数组，方法二
+    //p[0] = a;
+    //p[1] = a+1;
+    //p[2] = a+2;
+
+    n = sizeof(p)/sizeof(p[0]);
+
+    //数组赋值指针数组，方法三
+    for(i=0;i<n;i++)
+    {
+        p[i] = &a[i]; // a+i
+    }
+
+    //打印指针数组
+    for(i=0;i<n;i++)
+    {
+        // p[i]取指针变量的值，*p[i]取指针所指向内存的值
+        //printf("%d\n", *p[i]);
+
+        //p[1]==*(p+1),上面等价于
+        printf("%d\n", *(*(p+i)));
+    }
+
+    return 0;
+}
+*/
+
+/*
+//值传递
+void swap(int m, int n)
+{
+    int temp;
+
+    printf("m=%d, n=%d\n", m, n);
+
+    temp = m;
+    m = n;
+    n = temp;
+    printf("m=%d, n=%d\n", m, n);
+}
+
+int main()
+{
+    int a = 10;
+    int b = 20;
+    swap(a, b);
+
+    return 0;
+}
+*/
+
+//地址传递
+void swap(int *m, int *n)
+{
+    int temp;
+    temp = *m;
+    *m = *n;
+    *n = temp;
+}
+
+int main()
+{
+    int a = 10;
+    int b = 20;
+
+    printf("a=%d,b=%d\n", a, b);
+    swap(&a, &b);
+    printf("a=%d,b=%d\n", a, b);
 
     return 0;
 }
