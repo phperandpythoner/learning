@@ -166,11 +166,11 @@ int main()
 }
 */
 
+//Êı×éÖ¸Õë
 int main()
 {
-    int a[3] = {1,2,3,4,5};
+    int a[3] = {0,1,2};
     printf("%d\n", sizeof(a));
-
 
     return 0;
 }
