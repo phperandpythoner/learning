@@ -1,0 +1,77 @@
+. 代表此层目录
+.. 代表上一层目录
+- 代表前一个工作目录
+~ 代表『目前使用者身份』所在的家目录
+~account 代表 account 这个使用者的家目录
+
+**********************************************************************************************************
+ cd：变换目录
+ pwd：显示目前的目录
+ mkdir：建立一个新的目录
+ rmdir：删除一个空的目录
+
+**********************************************************************************************************
+挂载光驱
+挂载光驱mount -t iso9660 -o ro /dev/cdrom /mnt （注意命令中输入的空格）这时，你的linux.iso里面的文件就相当于windows光盘里面的文件了。
+　　输入df命令就可以看到如下图的挂载目录
+
+**********************************************************************************************************
+常用命令
+1、重命名 vm
+
+
+**********************************************************************************************************
+- 文件
+d 目录
+l 软连接
+**********************************************************************************************************
+
+格式：service <service> start
+启动指定的系统服务<service>
+ 
+格式：service <service> stop
+停止指定的系统服务<service>
+ 
+格式：service <service> restart
+重新启动指定的系统服务<service>，即先停止（stop），然后再启动（start）
+
+******************************************************************************************************
+linux下安装google protobuf（详细）
+下载自github的代码需要首先执行 $ ./autogen.sh 生成configure文件
+
+$./configure --prefix=/usr/local/protobuf
+$ make
+$ make check
+$ make install
+
+到此步还没有安装完毕，在/etc/profile 或者用户目录 ~/.bash_profile
+添加下面内容
+####### add protobuf lib path ########
+#(动态库搜索路径) 程序加载运行期间查找动态链接库时指定除了系统默认路径之外的其他路径
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/protobuf/lib/
+#(静态库搜索路径) 程序编译期间查找动态链接库时指定查找共享库的路径
+export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/protobuf/lib/
+#执行程序搜索路径
+export PATH=$PATH:/usr/local/protobuf/bin/
+#c程序头文件搜索路径
+export C_INCLUDE_PATH=$C_INCLUDE_PATH:/usr/local/protobuf/include/
+#c++程序头文件搜索路径
+export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:/usr/local/protobuf/include/
+#pkg-config 路径
+export PKG_CONFIG_PATH=/usr/local/protobuf/lib/pkgconfig/
+
+
+如果遇到错误：configure.ac:30: error: possibly undefined macro: AC_PROG_LIBTOOL
+则安装：缺少一个工具：sudo apt-get install libtool  
+centos：yum -y install libtool
+
+
+
+
+******************************************************************************************************
+常用命令：
+free：查看内存和Swap信息
+
+
+
+******************************************************************************************************

@@ -234,6 +234,7 @@ int main()
 }
 */
 
+/*
 //地址传递
 void swap(int *m, int *n)
 {
@@ -254,3 +255,158 @@ int main()
 
     return 0;
 }
+*/
+
+/*
+//形参中的数组
+//1、形参中的数组，不是数组，是普通指针变量
+//2、形参数组：int a[], int a[100], int *a对编译器而言，没有区别
+//3、编译器都是当做int *处理
+//4、形参中的数组和非形参中的数组区别：形参中的数组是指针变量，非形参中的数组是数组
+//void printf_array(int a[])
+//void printf_array(int a[100])
+void printf_array(int *a)
+{
+    int n = sizeof(a)/sizeof(a[0]);
+    int i;
+
+    for(i=0;i<n;i++)
+    {
+        printf("%d,", a[i]);
+    }
+    printf("\n");
+}
+
+//正确调用
+void printf_array2(int a[], int n)
+{
+    int i;
+
+    for(i=0;i<n;i++)
+    {
+        printf("%d,", a[i]);
+    }
+    printf("\n");
+}
+
+int main()
+{
+    int a[] = {1,-2,3,-4,5,-6,7,-8,9};
+    int n = sizeof(a)/sizeof(a[0]);
+    int j;
+    int i;
+    int temp;
+    for(i=0;i<n-1;i++)
+    {
+        for(j=0;j<n-1-i;j++)
+        {
+            if(a[j]>a[j+1])
+            {
+                temp = a[j];
+                a[j] = a[j+1];
+                a[j+1] = temp;
+            }
+        }
+    }
+    //printf_array(a);
+    printf_array2(a, n);
+
+    return 0;
+}
+*/
+
+/*
+//返回值是指针
+//案例说明：当调用一个函数的局部变量时，调用完了后局部变量会释放，则引用的指针会变成野指针（泛型指针）
+//Linux 64位的会报错
+int *fun()
+{
+    int a;
+
+    return &a;
+}
+int main()
+{
+    int *p = NULL;
+    p = fun(); //接收函数返回的地址
+    *p = 100; //操作指针所指向的内存
+    printf("*p=%p\n", *p); //*p=0000000000000064
+
+    return 0;
+}
+*/
+
+/*
+//返回全局变量的地址
+//1、在{}外面定义的变量，就是全局变量，全局变量任何地方都可以使用
+//2、全局变量当程序结束时，才释放
+int a;
+
+int *fun()
+{
+    return &a;
+}
+int main()
+{
+    int *p = NULL;
+    p = fun();
+    *p = 100;
+    printf("a=%d\n", a);
+
+    //fun()返回地址，*(fun())赋值指针所指向内存的值
+    *(fun()) = 200;
+    printf("a=%d\n", a);
+
+    return 0;
+}
+*/
+
+/*
+int main()
+{
+    char str[] = "hello world";
+    int i = 0;
+
+    //1、%s 从首元素开始打印，直到结束位置
+    //2、%s 操作的是指针所指向的内容
+    printf("str=%s\n", str);
+
+    //2、str是首元素地址，想打印str本身的值，%p,%x,%d,%o
+    printf("str = %p\n", str);
+
+    //3、*str代表第0个元素，它是char类型
+    printf("*str=%c\n", *str);
+
+    while(str[i] != '\0') //str[i] == *(str+i)
+    {
+        printf("%c", str[i]);
+        i++;
+    }
+    printf("\n");
+
+    return 0;
+}
+*/
+
+/*
+//字符指针
+int main()
+{
+    char str[] = "hello";
+    str[0] = '1';
+    str[1] = '2';
+    printf("%s\n", str); //12llo
+
+    char *p = NULL;
+    p = str; //p = str[0];
+
+    *p = 'a';
+    p++;
+    *p = 'b';
+    printf("%s\n", str); //abllo
+    printf("p=%s\n", p); //p=bllo
+    printf("p-1=%s\n", p-1); //p-1=abllo
+
+    return 0;
+}
+*/
