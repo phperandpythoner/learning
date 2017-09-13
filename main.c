@@ -410,3 +410,74 @@ int main()
     return 0;
 }
 */
+
+/*
+#include <string.h>
+//字符串常量
+int main()
+{
+    //字符串常量就是次字符串的首元素地址
+    printf("%p\n", "hello world"); //0000000000404000
+
+    char *p1 = "hello world";
+    printf("%p\n", p1); //0000000000404000
+
+    char *p2 = "hello world";
+    printf("%p\n", p2);//0000000000404000
+
+    //字符串常量，文字常量区的字符串，只读，不能修改
+    printf("%c\n", *p1);
+
+    //p1指向的字符串常量，字符串常量为只读，不能修改
+    //*p1 = 'a';
+
+    char *p3 = "hello";
+    //p3指向文字常量区，不能修改
+    //strcpy(p3, "abc");
+
+    return 0;
+}
+*/
+
+/*
+//main函数参数说明
+//argv[]:它是数组，数组每个元素都是char *，每个元素都是字符地址
+//argc:argv[]元素个数
+//main()函数参数，需要用户传递
+int main(int argc, char *argv[])
+{
+    int i = 0;
+    for(i=0;i<argc;i++)
+    {
+        printf("%s\n", argv[i]);
+    }
+
+    return 0;
+}
+*/
+
+#include <string.h>
+//查找匹配字符串出现的次数
+int main()
+{
+    char *p = "11abcdzxzxzabcd555abcd777gfdabcdss";
+    int i;
+    char *temp = NULL;
+    while(1)
+    {
+        //strstr:找出str2字符串在str1字符串中第一次出现的位置（不包括str2的串结束符）。返回该位置的指针，如找不到，返回空指针
+        temp = strstr(p, "abcd");
+        if(temp == NULL)//没找到
+        {
+            break;//跳出循环
+        }
+        else//找到
+        {
+            i++;//累加
+            p = temp + strlen("abcd");//重新设置查询起始位置
+        }
+    }
+    printf("%d\n", i);
+
+    return 0;
+}
