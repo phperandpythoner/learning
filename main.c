@@ -456,6 +456,7 @@ int main(int argc, char *argv[])
 }
 */
 
+/*
 #include <string.h>
 //查找匹配字符串出现的次数
 int main()
@@ -478,6 +479,36 @@ int main()
         }
     }
     printf("%d\n", i);
+
+    return 0;
+}
+*/
+
+#include <string.h>
+//两头堵模型
+int main()
+{
+    char *p = "      123456789     ";
+    char *start = p; //首元素地址
+    char *end = p+strlen(p)-1; //尾元素地址
+    int n;
+
+    //从左往右
+    while( *start == ' ' && *start != '\0')
+    {
+        start++;
+    }
+
+    //从右往左
+    while(*end == ' ' && *end != p)
+    {
+        end--;
+    }
+
+    n = end - start + 1;
+    printf("start=%d\n", start);
+    printf("end=%d\n", end);
+    printf("string len=%d\n", n);
 
     return 0;
 }
