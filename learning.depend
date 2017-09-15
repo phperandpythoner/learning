@@ -1,4 +1,7 @@
 # depslib dependency file v1.0
-1505199205 source:e:\liu workstations\c\learning\main.c
+1505443333 source:e:\liu workstations\c\learning\main.c
 	<stdio.h>
+	<string.h>
+	<string.h>
+	<string.h>
 

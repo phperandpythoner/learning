@@ -484,6 +484,7 @@ int main()
 }
 */
 
+/*
 #include <string.h>
 //两头堵模型
 int main()
@@ -512,3 +513,49 @@ int main()
 
     return 0;
 }
+*/
+
+/*
+//普通局部变量
+int main()
+{
+    //1、在{}定义的变量就是局部变量
+    //2、只有执行到定义变量这个语句，系统才会分配变量空间
+    //3、当离开{}，非static局部变量才释放
+    //4、局部变量作用在{}，离开{}，无法使用变量
+    //5、{}的普通局部变量，加不加auto关键字等价，普通局部变量也叫自动变量
+    //6、不同的{}中，变量名可以一样，但使用时根据就近原则
+
+    return 0;
+}
+*/
+
+//static局部变量
+void static_fun()
+{
+    //1、在{}定义的变量就是局部变量
+    //2、static局部变量，是在编译阶段就已分配空间，函数没有调用之前就已经存在
+    //3、当离开{}，static局部变量不会释放，只有程序结束，static变量才会释放
+    //4、局部变量作用在{}，离开{}，无法使用变量
+    //5、不同的{}中，变量名可以一样，但使用时根据就近原则
+    //6、如果static局部变量不初始化，默认值为0
+    //7、static局部变量初始化语句只执行一次，但可以多次赋值
+    //8、static局部变量只能用常量初始化（注意）
+
+    static int i = 0;
+    i++;
+    printf("static_fun i = %d\n", i);
+
+    //int a = 10;
+    //static int j = a; //error:initializer element is not constant
+}
+
+int main()
+{
+    static_fun();
+    static_fun();
+    static_fun();
+
+    return 0;
+}
+
