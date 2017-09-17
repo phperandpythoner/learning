@@ -530,6 +530,7 @@ int main()
 }
 */
 
+/*
 //static局部变量
 void static_fun()
 {
@@ -555,6 +556,549 @@ int main()
     static_fun();
     static_fun();
     static_fun();
+
+    return 0;
+}
+*/
+
+/*
+//内存操作函数--memset()
+int main()
+{
+    int a;
+    memset(&a, 0, sizeof(a)); //常用，用作清空变量值
+    printf("a=%d\n", a);
+
+    //中间参数虽然是整型，但以acssi字符处理
+    memset(&a, 97, sizeof(a));
+    printf("a1=%c\n", a);
+
+    //也可以用户赋值
+    char str[10];
+    memset(str, 'a', sizeof(str));
+    int i;
+    int n = sizeof(str)/sizeof(str[0]);
+    for(i=0;i<n;i++)
+    {
+        printf("%c,", str[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
+*/
+
+/*
+//内存操作函数--memcpy()
+#include <string.h>
+int main()
+{
+    char p[] = "hello\0world";
+    char buf[100];
+    printf("sizeof(p)=%lu\n", sizeof(p));
+
+    //strncpy遇到结束符'\0'，就结束
+    strncpy(buf, p, sizeof(p));
+    printf("buf1=%s\n", buf);
+    printf("buf2=%s\n", buf+strlen("hello")+1);
+
+    memset(buf, 0, sizeof(buf));
+    //把变量整拷贝到buf中
+    memcpy(buf, p, sizeof(p));
+    printf("buf3=%s\n", buf);
+    printf("buf4=%s\n", buf+strlen("hello")+1);
+
+    return 0;
+}
+*/
+
+/*
+//内存操作函数--memmove()
+int main()
+{
+    int a[10] = {1,2,3,4,5,6,7,8,9,10};
+    int b[10];
+
+    //第三个参数是指拷贝内存的总大小
+    //memcpy(b, a, 10 * sizeof(int));
+    //这两个相等
+    //memcpy(b, a, sizeof(a));
+
+    //使用memcpy最好别出现重叠，如果出现内存重叠，，使用memmove
+    memmove(&a[2], a, 5 * sizeof(int));
+
+    return 0;
+}
+*/
+
+/*
+//内存操作函数--memcmp(),主要用于比较内存里两数据是否相等
+int main()
+{
+    int a[10] = {1,2,3,4,5,6,7,8,9,10};
+    int b[10] = {1,2,3,4,5,6,7,8,9,11};
+    int flag = memcmp(a, b, 10 * sizeof(int));
+    if(flag < 0)
+    {
+        printf("a < b\n");
+    }
+    else if(flag > 0)
+    {
+        printf("a > b\n");
+    }
+    else if(flag == 0)
+    {
+        printf("a == b");
+    }
+
+    return 0;
+}
+*/
+
+/*
+//指针指向堆区空间
+int main()
+{
+    //malloc(sizeof(int))
+    //参数是指定堆区分配多大的空间
+    //返回值：成功则返回堆区空间首元素地址；失败则返回NULL
+
+    //原型：extern void *malloc(unsigned int num_bytes);
+    //头文件：#include <malloc.h> 或 #include <alloc.h> (注意：alloc.h 与 malloc.h 的内容是完全一致的。)
+    //功能：分配长度为num_bytes字节的内存块
+    //说明：如果分配成功则返回指向被分配内存的指针，否则返回空指针NULL。
+    //当内存不再使用时，应使用free()函数将内存块释放。
+
+    int *p = NULL;
+    p = (int *) malloc(sizeof(int));
+    if(p == NULL)
+    {
+        printf("分配空间失败\n");
+        return -1;//结束程序
+    }
+
+    *p = 10;
+    printf("*p=%d\n", *p);
+
+    if(NULL != p)
+    {
+        free(p);
+        p = NULL;
+    }
+
+    //说明：
+    //1、动态分配的空间，如果程序没有结束，不会自动释放
+    //2、一般使用完，需要人为释放free(p)
+    //3、free(p);不是释放p变量，是释放p所指向的内存
+    //4、同一块堆区内存只能释放一次
+    //5、释放是指系统回收了，如果用户再用，就是操作非法内存
+
+    return 0;
+}
+*/
+
+/*
+//堆区空间越界
+#include <string.h>
+#include <stdlib.h>
+int main()
+{
+    char *p = NULL;
+    p = (char *)malloc(0);//为字符指针变量p分配空间大小为0
+    if(p == NULL)
+    {
+        printf("分配失败\n");
+    }
+    strcpy(p, "hello world");
+    printf("p=%s\n", p);
+
+    free(p);
+
+    return 0;
+}
+*/
+
+/*
+//值传递
+void fun(int *tmp)
+{
+    *tmp = 100;
+}
+
+int main()
+{
+    int *p = NULL;
+    //malloc函数在堆区为p分配空间
+    p = (int *)malloc(sizeof(int));
+    //调用函数fun(p)，tmp变量指向p在堆区的空间，当fun()自动释放栈区tmp变量，但不会释放堆区里的空间
+    fun(p);
+    printf("*p=%d\n", *p);
+
+    return 0;
+}
+*/
+
+
+/*
+//返回堆区地址
+int *fun()
+{
+    int *tmp = NULL;
+    tmp = (int *)malloc(sizeof(int));
+    *tmp = 100;
+    return tmp;//返回堆区地址，返回调用完毕，不释放
+}
+int main()
+{
+    int *p = NULL;
+    p = fun();
+    printf("*p=%d\n", *p);
+
+    //堆区空间使用完毕，手动释放
+    if(p != NULL)
+    {
+        free(p);
+        p = NULL;
+    }
+
+    return 0;
+}
+*/
+
+
+/*
+//结构基本使用
+#include <string.h>
+struct Student
+{
+    //结构体内不能直接赋值给成员，因为没有分配空间
+    int age;
+    char name[50];
+    int score;
+};//有分号
+
+//介绍两种不常用的结构体定义方法
+//1、在定义结构体时定义变量名，并且可以给变量赋值
+struct Student1
+{
+    int age;
+    char name[50];
+    int score;
+}s1={20, "xiaoming", 60}, s2;
+//2、匿名结构体
+struct
+{
+    int age;
+    char name[50];
+    int score;
+}s3={30, "test", 70}, s4;
+
+int main()
+{
+    //定义结构体变量
+    //1、类型名、变量名
+    struct Student stu;
+
+    //1、结构体变量初始化，和数组一样，要使用大括号
+    //2、只有在定义时才能初始化
+    struct Student stu2 = {19, "allen", 100};
+
+    //使用结构体成员，不能直接使用，需要借用结构体变量来引用
+    struct Student tmp;
+
+    //如果是普通变量使用.点运算符
+    tmp.age = 18;
+    //tmp.name = "mike";//name成员是数组名，数组名是常量，不能修改
+    strcpy(tmp.name, "mike");
+    tmp.score = 99;
+
+    //如果是指针变量，使用->
+    //如果是指针，指针有合法指向，才能操作结构体成员
+    struct Student *p;
+    p = &tmp;//合法指向
+    p->age = 17;
+    strcpy(p->name, "mike");
+    p->score = 98;
+
+    //任何结构体变量都可以使用.和->操作成员
+    (&tmp)->age = 17;
+
+    (*p).score = 97;
+
+    printf("(&tmp)=%d\n", (&tmp)->age);
+    printf("(*p).score=%d\n", (*p).score);
+
+    //result:
+    //(&tmp)=17
+    //(*p).score=97
+
+    printf("s1.age=%d, s1.name=%s, s1.score=%d\n", s1.age, s1.name, s1.score);
+    printf("s3.age=%d, s3.name=%s, s3.score=%d\n", s3.age, s3.name, s3.score);
+
+    return 0;
+}
+*/
+
+
+/*
+//结构体数组
+#include <string.h>
+struct Student
+{
+    //结构体内不能直接赋值给成员，因为没有分配空间
+    int age;
+    char name[50];
+    int score;
+};//有分号
+
+int main()
+{
+    //给结构体数组赋值1
+    printf("********** 给结构体数组赋值1 **************\n");
+    struct Student s[5]; //结构体数组
+    //操作元素
+    s[0].age = 18;
+    strcpy(s[0].name, "test1");
+    s[0].score = 60;
+
+    (*(s+1)).age = 19;
+    strcpy((*(s+1)).name, "test2");
+    (*(s+1)).score = 61;
+
+    //操作地址
+
+    (s+2)->age = 20;
+    strcpy((s+2)->name, "test3");
+    (s+2)->score = 62;
+
+    //通过指针操作
+    struct Student *p = s;
+    //p = &s[0];
+    (p+3)->age = 21;
+    strcpy((p+3)->name, "test4");
+    (p+3)->score = 63;
+
+    p[4].age = 22;
+    strcpy(p[4].name, "test5");
+    p[4].score = 64;
+
+    int n = sizeof(s)/sizeof(s[0]);
+    int i;
+    for(i = 0; i < n; i++)
+    {
+        printf("%d, %s, %d\n", s[i].age, s[i].name, s[i].score);
+    }
+
+
+    //给结构体数组赋值2
+    printf("\n********** 给结构体数组赋值2 **************\n");
+    struct Student s2[5] = {
+        {23, "test6", 65},
+        {24, "test7", 66},
+        {25, "test8", 67},
+        {26, "test9", 68},
+        {27, "test10", 69}
+    };
+    int n2 = sizeof(s2)/sizeof(s2[0]);
+    for(i = 0; i < n2; i++)
+    {
+        printf("%d, %s, %d\n", s2[i].age, s2[i].name, s2[i].score);
+    }
+
+
+    //给结构体数组赋值3
+    printf("\n********** 给结构体数组赋值3 **************\n");
+    struct Student s3[5] = {
+        23, "test6", 70,
+        24, "test7", 71,
+        25, "test8", 72,
+        26, "test9", 73,
+        27, "test10", 74
+    };
+    int n3= sizeof(s3)/sizeof(s3[0]);
+    for(i = 0; i < n3; i++)
+    {
+        printf("%d, %s, %d\n", s3[i].age, s3[i].name, s3[i].score);
+    }
+
+    return 0;
+}
+*/
+
+/*
+//结构体的嵌套
+#include <string.h>
+struct Info
+{
+    int age;
+    char name[50];
+};
+
+struct Student
+{
+    struct Info info;
+    int score;
+};
+
+int main()
+{
+    struct Student s;
+    s.info.age = 18;
+    strcpy(s.info.name, "allen");
+    s.score = 60;
+    printf("%d, %s, %d\n", s.info.age, s.info.name, s.score);
+
+    struct Student *p = &s;//如果是数组，数组名则是首地址；如果是普通变量，则需要加取地址&
+    p->info.age = 19;
+    strcpy(p->info.name, "iverson");
+    p->score = 20;
+    printf("%d, %s, %d\n", p->info.age, p->info.name, p->score);
+
+    //在定义变量时直接赋值
+    struct Student tmp = {21, "xiaoming", 62};
+    printf("%d, %s, %d\n", tmp.info.age, tmp.info.name, tmp.score);
+
+    return 0;
+}
+*/
+
+
+/*
+//同类型的结构体变量赋值
+struct Student
+{
+    //结构体内不能直接赋值给成员，因为没有分配空间
+    int age;
+    char name[50];
+    int score;
+};//有分号
+
+int main()
+{
+    //相同类型的两个结构体可以相互赋值
+    //尽管两个结构体的内容一样，但两个变量时没有关系的独立内存
+    struct Student s1 = {18, "allen", 60};
+    struct Student s2;
+    s2 = s1;
+    printf("%d, %s, %d\n", s2.age, s2.name, s2.score);
+
+    return 0;
+}
+*/
+
+/*
+//指针指向堆区空间
+#include <string.h>
+struct Student
+{
+    //结构体内不能直接赋值给成员，因为没有分配空间
+    int age;
+    char name[50];
+    int score;
+};//有分号
+
+int main()
+{
+    struct Student *p = NULL;
+
+    //指针指向堆区空间
+    p = (struct Student *)malloc(sizeof(struct Student));
+    if(p == NULL)
+    {
+        printf("分配失败");
+        return 0;
+    }
+
+    p->age = 18;
+    strcpy(p->name, "allen");
+    p->score = 60;
+    printf("%d, %s, %d\n", p->age, p->name, p->score);
+
+    if(p != NULL)
+    {
+        free(p);
+        p = NULL;
+    }
+
+    return 0;
+}
+*/
+
+/*
+//结构体成员指针指向data区或栈区和指向堆区
+#include <string.h>
+#include <stdlib.h>
+struct Student
+{
+    int age;
+    char *name;
+    int score;
+    char *nickname;
+};
+
+int main()
+{
+    struct Student s;
+    s.age = 18;
+
+    char buf[100];
+    s.name = buf;//指向栈区空间
+    strcpy(s.name, "mike");
+
+    s.score = 59;
+    printf("buf=%s\n", buf);
+
+    //成员变量指针指向堆区空间
+    s.nickname = (struct Student *)malloc( strlen("allen") + 1 );
+    strcpy(s.nickname, "allen");
+
+    printf("%d, %s, %d, %s\n", s.age, s.name, s.score, s.nickname);
+
+    return 0;
+}
+*/
+
+
+//结构体套一级指针
+#include <string.h>
+#include <stdlib.h>
+struct Student
+{
+    int age;
+    char *name;
+    int score;
+};
+
+int main()
+{
+    struct Student *p;
+    p = (struct Student *)malloc(sizeof(struct Student));
+    if(p = NULL)
+    {
+        printf("malloc error\n");
+        return 0;
+    }
+
+    //p->name = (char *)malloc((strlen("allen")+1) * sizeof(char));//标准写法
+    p->name = (char *)malloc(strlen("mike")+1);
+
+    p->age = 18;
+    strcpy(p->name, "mike");
+    p->score = 59;
+    printf("%d, %s, %d\n", p->age, p->name, p->score);
+
+    //堆区空间释放，先释放子节点，在释放根节点
+    if(p->name != NULL)
+    {
+        free(p->name);
+        p->name = NULL;
+    }
+
+    if(p != NULL)
+    {
+        free(p);
+        p = NULL;
+    }
 
     return 0;
 }
