@@ -1059,6 +1059,7 @@ int main()
 */
 
 
+/*
 //结构体套一级指针
 #include <string.h>
 #include <stdlib.h>
@@ -1080,7 +1081,7 @@ int main()
     }
 
     //p->name = (char *)malloc((strlen("allen")+1) * sizeof(char));//标准写法
-    p->name = (char *)malloc(strlen("mike")+1);
+    p->name = (char *)malloc( strlen("mike") + 1 );//出现了段错误
 
     p->age = 18;
     strcpy(p->name, "mike");
@@ -1099,6 +1100,223 @@ int main()
         free(p);
         p = NULL;
     }
+
+    return 0;
+}
+*/
+
+
+/*
+//共用体（联合体）
+union Test
+{
+    unsigned char a;//1字节
+    unsigned short b;//2字节
+    unsigned int c;//4字节
+};
+
+int main()
+{
+    //共用体的大小为最大成员的大小
+    printf("%lu\n", sizeof(union Test));
+
+    //共用体公用一块内存，所有成员的地址一样
+    union Test obj;
+    printf("%p, %p, %p, %p\n", obj, obj.a, obj.b, obj.c);
+
+    //给某个成员赋值会影响到其他成员
+    //左边是高位，右边是低位
+    //高位放高地址，低位放低地址（小端）
+    obj.c = 0x44332211;
+    printf("obj.c=%x\n", obj.c);
+    printf("obj.b=%x\n", obj.b);
+    printf("obj.a=%x\n", obj.a);
+
+    obj.b = 0xbbaa;
+    printf("obj.c=%x\n", obj.c);
+    printf("obj.b=%x\n", obj.b);
+    printf("obj.a=%x\n", obj.a);
+
+    return 0;
+}
+*/
+
+
+/*
+//枚举类型
+//enum是关键字
+//里面的成员是一个标识符，枚举常量
+//枚举类型enum Color
+//第一个没有赋值，默认值为0，下一个成员比上一个成员多1
+//成员：枚举成员，枚举常量
+enum Color
+{
+    red, blue, yellow, green, pink=10, black, white
+};
+
+int main()
+{
+    int flag = 1;
+    if(flag == blue)
+    {
+        printf("blue\n");
+    }
+
+    //枚举变量
+    enum Color flag2;
+
+    //可以使用枚举成员给flag2赋值
+    flag2 = black;
+
+    return 0;
+}
+*/
+
+
+/*
+//typedef使用
+//给struct Test结构体起一个别名Info
+typedef struct Test
+{
+    int age;
+}Info;
+
+int main()
+{
+    //typedef给一个存在的类型起一个别名
+    //typedef不能创建新类型
+    typedef int int64;//给int取一个别名int64
+
+    //定义一个变量
+    Info info;
+    info.age = 19;
+    printf("%d\n", info.age);
+
+
+    return 0;
+}
+*/
+
+
+/*
+//标准文件指针
+int main()
+{
+    printf("123\n");
+    //fclose(stdout);//关闭标准输出文件指针
+    printf("456\n");
+
+    //打印库函数失败的原因
+    perror("result");
+    fclose(stderr);//关闭标准错误输出文件指针
+    perror("result2");
+
+    int a;
+    printf("enter a:");
+    fclose(stdin); //关闭标准输入文件指针
+    scanf("%d", &a);
+    printf("a=%d\n", a);
+
+    return 0;
+}
+*/
+
+
+/*
+//标准文件指针
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+int main()
+{
+    //printf()函数的内部实现，往标准输出设备(1)写内容
+    printf("before aaaaaaaaaaaaaaaaa\n");
+    //fclose(stdout);
+    close(1);//1代表标准输出设备，关闭了，1就是空闲的数字
+
+    int fd = open("1.txt", O_WRONLY, 0777);
+
+    //printf()函数的内部实现，往1写内容，但是现在1和1.txt关联，printf的内容写到1.txt
+    printf("fd = %d\n", fd);
+
+    printf("after bbbbbbbbbbbb1\n");
+    printf("after cccccccccccc2\n");
+    printf("after dddddddddddd3\n");
+
+    return 0;
+}
+*/
+
+/*
+//fputc()函数
+#include <string.h>
+int main()
+{
+    //1、打开文件
+    FILE *fp = NULL;
+    fp = fopen("2.txt", "w");
+    if(fp == NULL)
+    {
+        perror("fopen file fialed");
+        return -1;
+    }
+
+    //2、写文件
+    char ch = 'a';
+    while(ch <= 'z')//字符可以比较大小
+    {
+        fputc(ch, fp);
+        ch++;
+    }
+
+    char ch2[] = "-12-13-14-15-16";
+    int i;
+    int n = strlen(ch2);
+    for(i = 0; i < n; i++)
+    {
+        fputc(ch2[i], fp);
+    }
+
+    //3、关闭文件
+    fclose(fp);
+    fp = NULL;
+
+    return 0;
+}
+*/
+
+
+//fgetc()函数
+#include <string.h>
+int main()
+{
+    //1、打开文件
+    FILE *fp = NULL;
+    fp = fopen("2.txt", "r");
+    if(fp == NULL)
+    {
+        perror("fopen file fialed");
+        return -1;
+    }
+
+    //2、读文件
+    char ch;
+    while(1)
+    {
+        ch = fgetc(fp);
+        printf("%d\n", ch);
+        //if(ch == -1)
+        //if(ch == EOF) //EOF == -1
+        if(feof(fp))
+        {
+            break;
+        }
+    }
+
+    //3、关闭文件
+    fclose(fp);
+    fp = NULL;
 
     return 0;
 }
