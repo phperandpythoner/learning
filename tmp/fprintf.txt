@@ -1,0 +1,4 @@
+18, allen, 59
+19, iverson, 60
+20, kobe, 61
+21, yao, 62

@@ -1,6 +1,7 @@
 # depslib dependency file v1.0
-1505721821 source:e:\liu workstations\c\learning\main.c
+1505815198 source:e:\liu workstations\c\learning\main.c
 	<stdio.h>
+	<string.h>
 	<string.h>
 	<string.h>
 	<string.h>
@@ -18,4 +19,6 @@
 	<sys/types.h>
 	<sys/stat.h>
 	<fcntl.h>
+	<string.h>
+	<string.h>
 

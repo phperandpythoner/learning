@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 /*
 int main()
@@ -1286,7 +1287,7 @@ int main()
 }
 */
 
-
+/*
 //fgetc()函数
 #include <string.h>
 int main()
@@ -1320,4 +1321,188 @@ int main()
 
     return 0;
 }
+*/
 
+/*
+int calc(int a, int b, char ch)
+{
+    switch(ch)
+    {
+        case '+':
+            return a+b;
+        case '-':
+            return a-b;
+        case '*':
+            return a*b;
+        case '/':
+            return a/b;
+        default:
+            return 0;
+    }
+
+    return 0;
+}
+
+void write_file()
+{
+    FILE *fp = fopen("3.txt", "w");
+
+    char *buf[4];
+    buf[0] = "10+10=\n";
+    buf[1] = "10-10=\n";
+    buf[2] = "10*10=\n";
+    buf[3] = "10/10=\n";
+
+    int i;
+    int n = sizeof(buf)/sizeof(buf[0]);
+    for(i = 0; i < n; i++)
+    {
+        fputs(buf[i], fp);
+        //printf("%s\n", buf[i]);
+    }
+
+    fclose(fp);
+
+}
+
+void read_file()
+{
+    FILE *fp = fopen("3.txt", "r");
+
+    char buf[1024];
+    char tmp[2048] = {0};
+    while(1)
+    {
+        memset(buf, 0, sizeof(buf));
+        fgets(buf, sizeof(buf), fp);
+        if(strlen(buf) > 0)
+        {
+            int a,b;
+            char ch;
+            //printf("%s\n", buf);
+            //sscanf会从buffer里读进数据，依照format的格式将数据写入到argument里
+            sscanf(buf, "%d%c%d", &a, &ch, &b);
+            //sprintf() 用于将输出存到字符缓冲中
+            //函数原型：sprintf(char *buffer, const char *format, [argument]);
+            sprintf(buf, "%d%c%d=%d\n", a, ch, b, calc(a,b,ch));
+            strcat(tmp, buf);
+        }
+        if(feof(fp))
+        {
+            break;
+        }
+    }
+
+    //printf("%s\n", tmp);
+
+    fclose(fp);
+
+    fp = fopen("4.txt", "w");
+    fputs(tmp, fp);
+    fclose(fp);
+}
+
+int main()
+{
+    //write_file();
+
+    read_file();
+
+    return 0;
+}
+*/
+
+
+#include <stdlib.h>
+typedef struct Student
+{
+    int age;
+    char name[50];
+    int score;
+}Stu;
+
+//fprintf():将agars(参数表)内各项的值，按format(格式控制字符串)所表示的格式，将数据格式为字符串的形式写入到文件指针fp指向的文件中。
+//原型：fprintf(FILE *fp, const char *format, agars)
+void file_fprintf()
+{
+    FILE *fp = NULL;
+    fp = fopen("tmp/fprintf.txt", "w+");
+    if(fp == NULL)
+    {
+        perror("fopen");
+        return;
+    }
+
+    Stu s[4] = {
+        18, "allen", 59,
+        19, "iverson", 60,
+        20, "kobe", 61,
+        21, "yao", 62
+    };
+
+    int n = sizeof(s)/sizeof(s[0]);
+    int i = 0;;
+    for(i = 0; i < n; i++)
+    {
+        fprintf(fp, "%d, %s, %d\n", s[i].age, s[i].name, s[i].score);
+    }
+
+    fclose(fp);
+    fp = NULL;
+}
+
+//fscanf():从文件指针fp指向的文件中，按format中对应的控制格式读取数据，并存储在agars对应的变量中；
+//原型: fscanf(FILE *fp, const char *format, agars)
+void file_fscanf()
+{
+    FILE *fp = NULL;
+    fp = fopen("tmp/fprintf.txt", "r+");
+    if(fp == NULL)
+    {
+        perror("fopen");
+        return;
+    }
+
+    Stu s[4];
+    int n = sizeof(s)/sizeof(s[0]);
+    int i = 0;
+    int age,score;
+    char name[50];
+
+    while(1)
+    {
+        memset(name, 0, sizeof(name));
+        fscanf(fp, "%d, %s, %d\n", &age, &name, &score);
+        //printf("%d,%s,%d\n", age, name, score);
+        if(strlen(name) > 0)
+        {
+            s[i].age = age;
+            strcpy(s[i].name, name);
+            s[i].score = score;
+        }
+
+        if(feof(fp))
+        {
+            break;
+        }
+        i++;
+    }
+
+    for(i=0;i<n;i++)
+    {
+        printf("age=%d, name=%s, score=%d\n", s[i].age, s[i].name, s[i].score);
+    }
+
+
+    fclose(fp);
+    fp = NULL;
+}
+
+int main()
+{
+    //file_fprintf();
+
+    file_fscanf();
+
+    return 0;
+}
