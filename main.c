@@ -1498,11 +1498,82 @@ void file_fscanf()
     fp = NULL;
 }
 
+//在C语言中fwrite()函数常用语将一块内存区域中的数据写入到本地文本
+//size_t fwrite(const void* buffer, size_t size, size_t count, FILE* stream);
+//-- buffer:指向数据块的指针
+//-- size:每个数据的大小，单位为Byte(例如：sizeof(int)就是4)
+//-- count:数据个数
+//-- stream:文件指针
+void file_fwrite()
+{
+    FILE *fp = NULL;
+    fp = fopen("./tmp/fwrite.txt", "w+");
+    if(fp == NULL)
+    {
+        perror("fwrite fopen");
+        return;
+    }
+
+    Stu s[4] = {
+        18, "allen", 59,
+        19, "iverson", 60,
+        20, "kobe", 61,
+        21, "yao", 62
+    };
+
+    int i = 0;
+    int n = sizeof(s)/sizeof(s[0]);
+    for(i=0;i<n;i++)
+    {
+        int ret = fwrite(&s[i], 1, sizeof(s[i]), fp);
+        printf("ret = %d\n", ret);
+    }
+
+    fclose(fp);
+    fp = NULL;
+}
+
+//fread()
+//作用：从一个文件流中读取数据
+//size_t fread(void *buffer, size_t size, size_t count, FILE *stream);
+//  -- buffer:指向数据块的指针
+//  -- size:每个数据的大小，单位为Byte(例如：sizeof(int)就是4)
+//  -- count:数据个数
+//  -- stream:文件指针
+void file_fread()
+{
+    FILE *fp = NULL;
+    fp = fopen("./tmp/fwrite.txt", "r");
+    if(fp == NULL)
+    {
+        perror("fread fopen");
+        return;
+    }
+
+    Stu s[4];
+
+    int i = 0;
+    int ret = fread(&s[0], 1, sizeof(s)*4, fp);
+
+    int n = sizeof(s)/sizeof(s[0]);
+
+    for(i=0;i<n;i++)
+    {
+        printf("%d, %s, %d\n", s[i].age, s[i].name, s[i].score);
+    }
+
+    fclose(fp);
+}
+
 int main()
 {
     //file_fprintf();
 
-    file_fscanf();
+    //file_fscanf();
+
+    //file_fwrite();
+
+    file_fread();
 
     return 0;
 }
